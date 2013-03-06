@@ -1,0 +1,22 @@
+{
+    "name": "eventstore",
+    "version": "0.0.0",
+    "description": "A simple eventstore for node.js",
+    "main": "app.js",
+    "scripts": {
+        "test": "mocha --recursive tests/"
+    },
+    "repository": "",
+    "keywords": [
+        "eventstore",
+        "eventsourcing"],
+    "dependencies": {
+        "mocha": "latest",
+        "underscore": "latest",
+        "assert.js" : "latest",
+        "sinon":"latest",
+        "node-uuid":"latest"
+    },
+    "author": "Andrew Rea",
+    "license": "BSD"
+}
