@@ -4,7 +4,7 @@ var uuid = require("node-uuid");
 
 function AggregateRoot(options) {
     this.id = options.id;
-    this.events = [];
+    this.uncommittedEvents = [];
     this.version = 0;
 }
 
@@ -45,7 +45,7 @@ describe("Test Aggregate Root", function() {
     });
 
     it("Should initialize events", function() {
-        assert.equal(this.testAgg.events.length, 0);
+        assert.equal(this.testAgg.uncommittedEvents.length, 0);
     });
 
     it("Should initialize version", function() {
@@ -56,9 +56,17 @@ describe("Test Aggregate Root", function() {
         assert.equal(this.testAgg.id, this.id);
     });
 
-    it("Should apply a known event", function() {
+    it("Should increment the version of the AggregateRoot after handling a known event", function() {
         this.testAgg.changeName("Andy");
         assert.equal(this.testAgg.version, 1);
+    });
+
+    it("Should add the event being handled to the AggregateRoots list of uncommitted events", function(){
+
+    });
+
+    it("Should assign the version of the AggregateRoot to the event being handled", function(){
+
     });
 
 });
