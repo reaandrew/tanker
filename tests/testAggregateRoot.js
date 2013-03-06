@@ -9,7 +9,8 @@ function AggregateRoot(options) {
 }
 
 AggregateRoot.prototype.applyChange = function(event) {
-    event.version = this.version++;
+    event.version = ++this.version;
+    this.uncommittedEvents.push(event);
     this["handle_" + event._eventName].apply(this, [event]);
 }
 
@@ -37,7 +38,7 @@ DummyAggregateRoot.prototype.handle_NameChangedEvent = function(event) {
 
 describe("Test Aggregate Root", function() {
 
-    before(function() {
+    beforeEach(function() {
         this.id = uuid.v4();
         this.testAgg = new DummyAggregateRoot({
             id: this.id
@@ -62,11 +63,14 @@ describe("Test Aggregate Root", function() {
     });
 
     it("Should add the event being handled to the AggregateRoots list of uncommitted events", function(){
-
+        this.testAgg.changeName("Andy");
+        assert.equal(this.testAgg.uncommittedEvents.length, 1);
     });
 
     it("Should assign the version of the AggregateRoot to the event being handled", function(){
-
+        this.testAgg.changeName("Andy");
+        var event = this.testAgg.uncommittedEvents[0];
+        assert.equal(event.version, 1);
     });
 
 });
