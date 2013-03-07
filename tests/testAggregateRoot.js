@@ -29,6 +29,10 @@ AggregateRoot.prototype.replay = function(events) {
     });
 }
 
+AggregateRoot.prototype.markAsCommitted = function(){
+    this.uncommittedEvents = [];
+}
+
 function DummyAggregateRootCreatedEvent(options) {
     this._eventName = DummyAggregateRootCreatedEvent.name;
     this.id = options.id;
@@ -62,6 +66,18 @@ DummyAggregateRoot.prototype.handle_DummyAggregateRootCreatedEvent = function(ev
 
 
 describe("Test Aggregate Root", function() {
+
+    it("Should remove all uncommitted events when marked as committed", function() {
+        this.id = uuid.v4();
+        this.name = "Something";
+        this.testAgg = new DummyAggregateRoot({
+            id: this.id,
+            name: this.name
+        });
+
+        this.testAgg.markAsCommitted();
+        assert.equal(this.testAgg.uncommittedEvents.length, 0);
+    });
 
     describe("Test Creating an AggregateRoot", function() {
         beforeEach(function() {
@@ -108,6 +124,5 @@ describe("Test Aggregate Root", function() {
             });
             assert.equal(testAgg.version, version);
         });
-
     });
 });
