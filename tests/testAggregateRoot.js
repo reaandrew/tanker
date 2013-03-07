@@ -1,6 +1,7 @@
 var util = require("util");
 var assert = require("assert");
 var uuid = require("node-uuid");
+var _ = require("underscore");
 
 function AggregateRoot() {
     this.id = null;
@@ -14,24 +15,38 @@ AggregateRoot.prototype.applyChange = function(event) {
     this["handle_" + event._eventName].apply(this, [event]);
 }
 
+AggregateRoot.prototype.replay = function(events){
+    var that = this;
+    _.each(events, function(event){
+        that.version = event.version;
+        that["handle_" + event._eventName].apply(that, [event]);
+    });
+}
+
 function DummyAggregateRootCreatedEvent(options){
     this._eventName = DummyAggregateRootCreatedEvent.name;
     this.id = options.id;
     this.name = options.name;
-};
-
-function NameChangedEvent(options) {
-    this._eventName = NameChangedEvent.name;
-    this.id = options.id;
-    this.name = options.name;
+    this.version = options.version;
 };
 
 function DummyAggregateRoot(options) {
     AggregateRoot.call(this);
-    this.applyChange(new DummyAggregateRootCreatedEvent({
-        id : options.id,
-        name : options.name
-    }));
+    
+    if(options.events != null){
+        this.replay(options.events);
+    }else{
+        if(options.id == null){
+            throw new Error("ID is required");
+        }
+        if(options.name == null){
+            throw new Error("Name is required");
+        }
+        this.applyChange(new DummyAggregateRootCreatedEvent({
+            id : options.id,
+            name : options.name
+        }));
+    }
 };
 
 util.inherits(DummyAggregateRoot, AggregateRoot);
@@ -43,29 +58,50 @@ DummyAggregateRoot.prototype.handle_DummyAggregateRootCreatedEvent = function(ev
 
 
 describe("Test Aggregate Root", function() {
-    beforeEach(function() {
-        this.id = uuid.v4();
-        this.name = "Something";
-        this.testAgg = new DummyAggregateRoot({
-            id: this.id,
-            name : this.name
+
+    describe("Test Creating an AggregateRoot", function(){
+        beforeEach(function() {
+            this.id = uuid.v4();
+            this.name = "Something";
+            this.testAgg = new DummyAggregateRoot({
+                id: this.id,
+                name : this.name
+            });
+        });
+
+        it("Should initialize id from parameters", function() {
+            assert.equal(this.testAgg.id, this.id);
+        });
+
+        it("Should increment the version of the AggregateRoot after handling a known event", function() {
+            assert.equal(this.testAgg.version, 1);
+        });
+
+        it("Should add the event being handled to the AggregateRoots list of uncommitted events", function(){
+            assert.equal(this.testAgg.uncommittedEvents.length, 1);
+        });
+
+        it("Should assign the version of the AggregateRoot to the event being handled", function(){
+            var event = this.testAgg.uncommittedEvents[0];
+            assert.equal(event.version, 1);
         });
     });
 
-    it("Should initialize id from parameters", function() {
-        assert.equal(this.testAgg.id, this.id);
-    });
+    describe("Test Replaying Events on the AggregateRoot", function(){
 
-    it("Should increment the version of the AggregateRoot after handling a known event", function() {
-        assert.equal(this.testAgg.version, 1);
-    });
+        it("Should assign the version of the event to the aggregate root", function(){
+            var id = uuid.v4();
+            var name = "SomeName";
+            var version = 1;
+            var events = [
+            new DummyAggregateRootCreatedEvent({id : id, name : name, version : version})
+            ];
+        var testAgg = new DummyAggregateRoot({
+            events : events
+        });
+        assert.equal(testAgg.version, version);
+        });
 
-    it("Should add the event being handled to the AggregateRoots list of uncommitted events", function(){
-        assert.equal(this.testAgg.uncommittedEvents.length, 1);
-    });
-
-    it("Should assign the version of the AggregateRoot to the event being handled", function(){
-        var event = this.testAgg.uncommittedEvents[0];
-        assert.equal(event.version, 1);
     });
 });
+
