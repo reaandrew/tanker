@@ -1,6 +1,8 @@
-EventSourcingInNode
+function DomainRepository(eventStore) {
+    this.eventStore = eventStore;
+}
 
-mainRepository.prototype.save = function(domainObject, callback) {
+DomainRepository.prototype.save = function(domainObject, callback) {
     this.eventStore.saveEvents(domainObject.uncommittedEvents, function(){
         domainObject.markAsCommitted();
         callback();
@@ -16,5 +18,4 @@ DomainRepository.prototype.get = function(proto, id, callback){
     });
 }
 
-
-Simple event sourcing library for node.js
+module.exports = DomainRepository;
