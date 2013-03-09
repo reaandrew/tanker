@@ -1,8 +1,7 @@
 {
-    "name": "eventstore",
+    "name": "eventsourcing",
     "version": "0.0.0",
     "description": "A simple event sourcing for node.js",
-    "main": "app.js",
     "scripts": {
         "test": "mocha --recursive tests/"
     },
