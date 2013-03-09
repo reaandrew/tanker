@@ -2,7 +2,7 @@ var util = require("util");
 var assert = require("assert");
 var uuid = require("node-uuid");
 var _ = require("underscore");
-var AggregateRoot = require("../libs/AggregateRoot");
+var AggregateRoot = require("../lib/AggregateRoot");
 var DummyAggregateRoot = require("./support/DummyAggregateRoot");
 var DummyAggregateRootCreatedEvent = require("./support/DummyAggregateRootCreatedEvent");
 

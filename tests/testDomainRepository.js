@@ -2,7 +2,7 @@ var util = require("util");
 var assert = require("assert");
 var uuid = require("node-uuid");
 var sinon = require("sinon");
-var DomainRepository = require("../libs/DomainRepository");
+var DomainRepository = require("../lib/DomainRepository");
 var DummyAggregateRoot = require("./support/DummyAggregateRoot");
 var DummyAggregateRootCreatedEvent = require("./support/DummyAggregateRootCreatedEvent");
 

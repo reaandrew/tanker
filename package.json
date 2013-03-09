@@ -6,7 +6,11 @@
     "scripts": {
         "test": "mocha --recursive tests/"
     },
-    "repository": "",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/REAANDREW/EventSourcingInNode.git"
+    },
+    "main": "./lib/EventSourcing",
     "keywords": [
         "eventsourcing"],
     "dependencies": {
