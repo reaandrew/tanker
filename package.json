@@ -17,7 +17,9 @@
         "underscore": "latest",
         "assert.js": "latest",
         "sinon": "latest",
-        "node-uuid": "latest"
+        "node-uuid": "latest",
+        "redis":"latest",
+        "hiredis":"latest"
     },
     "author": "Andrew Rea",
     "license": "BSD"
