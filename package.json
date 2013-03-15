@@ -19,7 +19,8 @@
         "sinon": "latest",
         "node-uuid": "latest",
         "redis":"latest",
-        "hiredis":"latest"
+        "hiredis":"latest",
+        "async":"latest"
     },
     "author": "Andrew Rea",
     "license": "BSD"
