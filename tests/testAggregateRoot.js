@@ -35,7 +35,7 @@ describe("Test Aggregate Root", function() {
         });
 
         it("Should increment the version of the AggregateRoot after handling a known event", function() {
-            assert.equal(this.testAgg.version, 1);
+            assert.equal(this.testAgg.nextVersion, 1);
         });
 
         it("Should add the event being handled to the AggregateRoots list of uncommitted events", function() {
@@ -46,24 +46,36 @@ describe("Test Aggregate Root", function() {
             var event = this.testAgg.uncommittedEvents[0];
             assert.equal(event.version, 1);
         });
+
+        it("Should assign the next version to the actual version once the aggregate root is committed", function(){
+           this.testAgg.markAsCommitted();
+           assert.equal(this.testAgg.version, 1);
+        });
     });
 
     describe("Test Replaying Events on the AggregateRoot", function() {
 
-        it("Should assign the version of the event to the aggregate root", function() {
+        beforeEach(function(){
+            this.version = 1;
             var id = uuid.v4();
             var name = "SomeName";
-            var version = 1;
             var events = [
             new DummyAggregateRootCreatedEvent({
                 id: id,
                 name: name,
-                version: version
+                version: this.version
             })];
-            var testAgg = new DummyAggregateRoot({
+            this.testAgg = new DummyAggregateRoot({
                 events: events
             });
-            assert.equal(testAgg.version, version);
+        });
+
+        it("Should assign the version of the event to the aggregate root", function() {
+            assert.equal(this.testAgg.version, this.version);
+        });
+
+        it("Should assign the version to the next version for further events to be applied", function(){
+            assert.equal(this.testAgg.nextVersion, this.version);
         });
     });
 });
