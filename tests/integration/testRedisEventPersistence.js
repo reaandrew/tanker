@@ -46,11 +46,12 @@ describe("Test Redis Event Persistence", function() {
             version : 2,
             _eventName:"dummy"
         }];
-        context.redisClient.hset(aggregateId, events[0].version, events[0],function(){
-            context.redisClient.hset(aggregateId, events[1].version, events[1], function(){
+        context.redisClient.hset(aggregateId, events[0].version, JSON.stringify(events[0]),function(){
+            context.redisClient.hset(aggregateId, events[1].version, JSON.stringify(events[1]), function(){
                 var eventStore = new RedisEventStore();
                 eventStore.get(aggregateId, function(err, events){
                     assert.equal(events.length, 2);
+                    assert.equal(events[0].version, 1);
                     done();
                 });
             });

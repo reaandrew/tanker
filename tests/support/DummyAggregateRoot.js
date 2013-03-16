@@ -1,6 +1,6 @@
 var util = require("util");
 var DummyAggregateRootCreatedEvent = require("./DummyAggregateRootCreatedEvent");
-var AggregateRoot = require("../../libs/AggregateRoot");
+var AggregateRoot = require("../../lib/AggregateRoot");
 
 function DummyAggregateRoot(options) {
     AggregateRoot.call(this, options);
