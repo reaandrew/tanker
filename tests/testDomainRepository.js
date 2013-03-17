@@ -44,7 +44,7 @@ describe("Test Domain Repository", function() {
         var eventStore = {
             getEvents : sinon.stub()
         }
-        eventStore.getEvents.callsArgWith(1,[event]);
+        eventStore.getEvents.callsArgWith(1,null,[event]);
         var domainRepository = new DomainRepository(eventStore);
         domainRepository.get(DummyAggregateRoot, id, function(object){
             assert.equal(object.version, 1);
