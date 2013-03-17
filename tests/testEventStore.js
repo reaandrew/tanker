@@ -10,7 +10,10 @@ describe("Test Event Store Getting Events", function() {
             get: sinon.stub(),
             save: sinon.stub()
         };
-        this.eventStore = new EventStore(this.eventPersistence);
+        this.eventPublisher = {
+            publish : sinon.spy()
+        };
+        this.eventStore = new EventStore(this.eventPersistence, this.eventPublisher);
     });
 
     it("Should return events in ascending order of version", function(done) {
@@ -36,6 +39,7 @@ describe("Test Event Store Saving Events", function() {
     beforeEach(function(done){
         var context = this;
         this.events = [];
+        this.eventsPublished = [];
         this.eventPersistence = {
             save: function(events, aggregateId, expectedVersion, callback){
                events.forEach(function(event){
@@ -44,7 +48,13 @@ describe("Test Event Store Saving Events", function() {
                callback(null);
             }
         };
-        this.eventStore = new EventStore(this.eventPersistence);
+        this.eventPublisher = {
+            publish : function(event, callback){
+                context.eventsPublished.push(event);
+                callback(null);
+            }
+        }
+        this.eventStore = new EventStore(this.eventPersistence, this.eventPublisher);
         done();
     });
 
@@ -59,6 +69,38 @@ describe("Test Event Store Saving Events", function() {
             assert.deepEqual(eventsToSave, context.events);
             done();
         });
+    });
 
+    it("Should publish events to the event publisher", function(done){
+        var context = this;
+        var aggregateId = uuid.v4();
+        var eventsToSave = [{
+            version: 1,
+            _eventName: "dummy"
+        }];
+        this.eventStore.saveEvents(eventsToSave, aggregateId, 0, function(err){
+            assert.deepEqual(eventsToSave, context.eventsPublished);
+            done();
+        });
+    });
+
+    it("Should not publish events when there was an error saving the events to the persistence", function(done){
+        var context = this;
+        var aggregateId = uuid.v4();
+        var eventsToSave = [{
+            version: 1,
+            _eventName: "dummy"
+        }];
+
+        this.eventPersistence = {
+            save : function(events, aggregateId, expectedVersion, callback){
+                callback("BANG");
+            }
+        };
+        this.eventStore = new EventStore(this.eventPersistence, this.eventPublisher);
+        this.eventStore.saveEvents(eventsToSave, aggregateId, 0, function(err){
+            assert.equal(context.eventsPublished.length, 0);
+            done();
+        });
     });
 });
