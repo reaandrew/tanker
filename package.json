@@ -20,7 +20,8 @@
         "node-uuid": "latest",
         "redis":"latest",
         "hiredis":"latest",
-        "async":"latest"
+        "async":"latest",
+        "rabbit.js":"latest"
     },
     "author": "Andrew Rea",
     "license": "BSD"
