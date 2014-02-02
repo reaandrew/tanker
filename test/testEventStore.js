@@ -23,10 +23,11 @@ describe("Test Event Store Getting Events", function() {
         }, {
             version: 1,
             _eventName: "dummy"
-        }]
+        }];
         this.eventPersistence.get.callsArgWith(1, null, testEvents);
         var expected = [testEvents[1], testEvents[0]];
         this.eventStore.getEvents(uuid.v4(), function(err, events) {
+            assert(err == null);
             assert.deepEqual(events, expected);
             done();
         });
@@ -53,7 +54,7 @@ describe("Test Event Store Saving Events", function() {
                 context.eventsPublished.push(event);
                 callback(null);
             }
-        }
+        };
         this.eventStore = new EventStore(this.eventPersistence, this.eventPublisher);
         done();
     });
@@ -66,6 +67,7 @@ describe("Test Event Store Saving Events", function() {
             _eventName: "dummy"
         }];
         this.eventStore.saveEvents(eventsToSave, aggregateId, 0, function(err){
+            assert(err == null);
             assert.deepEqual(eventsToSave, context.events);
             done();
         });
@@ -79,6 +81,7 @@ describe("Test Event Store Saving Events", function() {
             _eventName: "dummy"
         }];
         this.eventStore.saveEvents(eventsToSave, aggregateId, 0, function(err){
+            assert(err == null);
             assert.deepEqual(eventsToSave, context.eventsPublished);
             done();
         });
@@ -99,6 +102,7 @@ describe("Test Event Store Saving Events", function() {
         };
         this.eventStore = new EventStore(this.eventPersistence, this.eventPublisher);
         this.eventStore.saveEvents(eventsToSave, aggregateId, 0, function(err){
+            assert.notEqual(err,null);
             assert.equal(context.eventsPublished.length, 0);
             done();
         });

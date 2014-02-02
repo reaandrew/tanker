@@ -1,28 +1,46 @@
 {
-    "name": "eventsourcing",
-    "version": "0.0.0",
-    "description": "A simple event sourcing for node.js",
-    "scripts": {
-        "test": "mocha --recursive tests/"
-    },
-    "repository": {
-        "type": "git",
-        "url": "https://github.com/REAANDREW/EventSourcingInNode.git"
-    },
-    "main": "./lib/EventSourcing",
-    "keywords": [
-        "eventsourcing"],
-    "dependencies": {
-        "mocha": "latest",
-        "underscore": "latest",
-        "assert.js": "latest",
-        "sinon": "latest",
-        "node-uuid": "latest",
-        "redis":"latest",
-        "hiredis":"latest",
-        "async":"latest",
-        "rabbit.js":"latest"
-    },
-    "author": "Andrew Rea",
-    "license": "BSD"
+  "name": "tanker",
+  "description": "Simple event store in node",
+  "version": "0.1.0",
+  "homepage": "https://github.com/REAANDREW/EventSourcingInNode",
+  "author": {
+    "name": "Andrew Rea",
+    "email": "email@andrewrea.co.uk"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/REAANDREW/EventSourcingInNode.git"
+  },
+  "bugs": {
+    "url": "https://github.com/REAANDREW/EventSourcingInNode/issues"
+  },
+  "licenses": [
+    {
+      "type": "MIT",
+      "url": "https://github.com/REAANDREW/EventSourcingInNode/blob/master/LICENSE-MIT"
+    }
+  ],
+  "main": "lib/tanker",
+  "engines": {
+    "node": ">= 0.8.0"
+  },
+  "scripts": {
+    "test": "grunt"
+  },
+  "devDependencies": {
+    "grunt-contrib-jshint": "~0.8.0",
+    "grunt-contrib-nodeunit": "~0.2.0",
+    "grunt-contrib-watch": "~0.5.3",
+    "grunt": "~0.4.2",
+    "grunt-cli": "~0.1.13",
+    "grunt-notify": "~0.2.17",
+    "grunt-mocha-test": "~0.9.0",
+    "sinon": "~1.8.1"
+  },
+  "keywords": [],
+  "dependencies": {
+    "node-uuid": "~1.4.1",
+    "underscore": "~1.5.2",
+    "async": "~0.2.10"
+  }
 }

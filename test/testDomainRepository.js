@@ -1,4 +1,3 @@
-var util = require("util");
 var assert = require("assert");
 var uuid = require("node-uuid");
 var sinon = require("sinon");
@@ -43,7 +42,7 @@ describe("Test Domain Repository", function() {
         });
         var eventStore = {
             getEvents : sinon.stub()
-        }
+        };
         eventStore.getEvents.callsArgWith(1,null,[event]);
         var domainRepository = new DomainRepository(eventStore);
         domainRepository.get(DummyAggregateRoot, id, function(object){
