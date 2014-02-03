@@ -1,4 +1,4 @@
-# tanker [![Build Status](https://secure.travis-ci.org/REAANDREW/EventSourcingInNode.png?branch=master)](http://travis-ci.org/REAANDREW/EventSourcingInNode)
+# tanker [![Build Status](https://secure.travis-ci.org/REAANDREW/tanker.png?branch=master)](http://travis-ci.org/REAANDREW/tanker)
 
 Simple event store in node
 
