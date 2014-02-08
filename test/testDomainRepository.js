@@ -9,6 +9,22 @@ require("should");
 
 describe("Test Domain Repository", function() {
 
+    var eventStore;
+    var eventPublisher;
+
+    beforeEach(function(done) {
+        eventStore = {
+            saveEvents : sinon.stub(),
+            getEvents : sinon.stub()
+        };
+        eventPublisher = {
+            publish: function(evts, callback) {
+                callback();
+            }
+        };
+        done();
+    });
+
     it("Should save an aggregate roots events to the event store", function(done) {
         var name = "SomeName";
         var id = uuid.v4();
@@ -16,11 +32,8 @@ describe("Test Domain Repository", function() {
             id: id,
             name: name
         });
-        var eventStore = {
-            saveEvents: sinon.stub()
-        };
         eventStore.saveEvents.callsArg(1);
-        var domainRepository = new DomainRepository(eventStore);
+        var domainRepository = new DomainRepository(eventStore, eventPublisher);
         domainRepository.save(root, function() {
             var aggRoot = eventStore.saveEvents.getCall(0).args[0];
             aggRoot.should.eql(root);
@@ -33,16 +46,13 @@ describe("Test Domain Repository", function() {
         var name = "Something";
         var version = 1;
         var event = new DummyAggregateRootCreatedEvent({
-            id : id,
-            name : name,
-            version : version
+            id: id,
+            name: name,
+            version: version
         });
-        var eventStore = {
-            getEvents : sinon.stub()
-        };
-        eventStore.getEvents.callsArgWith(1,null,[event]);
-        var domainRepository = new DomainRepository(eventStore);
-        domainRepository.get(DummyAggregateRoot, id, function(object){
+        eventStore.getEvents.callsArgWith(1, null, [event]);
+        var domainRepository = new DomainRepository(eventStore, eventPublisher);
+        domainRepository.get(DummyAggregateRoot, id, function(object) {
             assert.equal(object.version, 1);
             done();
         });
