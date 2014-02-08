@@ -4,6 +4,7 @@ var sinon = require("sinon");
 var DomainRepository = require("../lib/DomainRepository");
 var DummyAggregateRoot = require("./support/DummyAggregateRoot");
 var DummyAggregateRootCreatedEvent = require("./support/DummyAggregateRootCreatedEvent");
+require("should");
 
 
 describe("Test Domain Repository", function() {
@@ -21,12 +22,8 @@ describe("Test Domain Repository", function() {
         eventStore.saveEvents.callsArg(1);
         var domainRepository = new DomainRepository(eventStore);
         domainRepository.save(root, function() {
-            var events = eventStore.saveEvents.getCall(0).args[0];
-            var event = events[0];
-            assert.equal(event.id, id);
-            assert.equal(event.name, name);
-            assert.equal(event.version, 1);
-            assert.equal(root.uncommittedEvents.length, 0);
+            var aggRoot = eventStore.saveEvents.getCall(0).args[0];
+            aggRoot.should.eql(root);
             done();
         });
     });
